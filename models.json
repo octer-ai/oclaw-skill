@@ -66,12 +66,13 @@
       "doubao-seedance-2-0-mini-260615": {
         "name": "Doubao Seedance 2.0 Mini",
         "route": "video",
-        "tested": true
+        "tested": true,
+        "note": "Verified text-to-video. As of 2026-07-09 the test gateway accepts but ignores reference-image fields (image/image_url/first_frame_image) and duration"
       },
       "grok-imagine-1.5-video": {
         "name": "Grok Imagine 1.5 Video",
         "route": "video",
-        "tested": false
+        "tested": true
       }
     }
   }
