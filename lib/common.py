@@ -21,6 +21,7 @@ from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_BASE_URL = "https://octer.ai/v1"
+USER_AGENT = "oclaw-skill/1.0"  # Cloudflare 会拦默认的 Python-urllib UA(error 1010)
 
 DEFAULT_MODELS = {
     "image": "gpt-image-2",
@@ -67,6 +68,7 @@ def api_request(method, endpoint, data=None, timeout=300):
     headers = {
         "Authorization": f"Bearer {get_api_key()}",
         "Content-Type": "application/json",
+        "User-Agent": USER_AGENT,
     }
     body = json.dumps(data).encode("utf-8") if data is not None else None
     req = urllib.request.Request(url, data=body, headers=headers, method=method)
