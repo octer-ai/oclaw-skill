@@ -176,10 +176,6 @@ Find the task id with `./oclaw.sh status`.
 
 The image model replied with text instead of an image — usually a content-policy refusal. Rephrase the prompt.
 
-### doubao-seedream errors
-
-`doubao-seedream-4-5-251128` is listed by the gateway but not usable on the test gateway as of 2026-07-09 (all routes rejected upstream). Use `gpt-image-2` or the Gemini image models instead.
-
 ## License
 
 MIT

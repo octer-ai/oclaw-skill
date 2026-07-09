@@ -42,11 +42,9 @@ See `./oclaw.sh models` for the live catalog (✓ = verified against the API).
 
 | Category | Models |
 |---|---|
-| image | gpt-image-2 (default), gemini-3-pro-image-preview, gemini-3.1-flash-image-preview, doubao-seedream-4-5* |
+| image | gpt-image-2 (default), gemini-3-pro-image-preview, gemini-3.1-flash-image-preview |
 | video | doubao-seedance-2-0 (default) / -fast / -mini, grok-imagine-1.5-video |
 | chat | gpt-5.5 (default), claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro |
-
-\* not usable on the test gateway as of 2026-07-09 — see `models.json` notes.
 
 **Known gateway limitations (2026-07-09):** the test gateway accepts but ignores the
 reference-image (`--image`) and `--duration` parameters for video — outputs come back
