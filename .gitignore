@@ -10,3 +10,6 @@ config.json
 # Python
 __pycache__/
 *.pyc
+
+# Internal design docs (not published)
+docs/superpowers/
