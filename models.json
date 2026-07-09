@@ -48,7 +48,8 @@
       "doubao-seedream-4-5-251128": {
         "name": "Doubao Seedream 4.5",
         "route": "image_chat",
-        "tested": false
+        "tested": false,
+        "note": "Not usable on test gateway as of 2026-07-09: chat route returns 307, /images/generations and /video/generations both rejected upstream"
       }
     },
     "video": {
