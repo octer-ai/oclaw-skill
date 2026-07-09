@@ -9,7 +9,7 @@ files:
   - "models.json"
   - "config.example.json"
 metadata:
-  author: Yizhi0816
+  author: smallke
   clawdbot:
     emoji: "🐙"
     primaryEnv: OCLAW_API_KEY
