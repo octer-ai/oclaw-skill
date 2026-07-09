@@ -1,0 +1,25 @@
+{
+  "lastUpdated": "2026-07-09",
+  "source": "Probed against https://test.octer.ai/v1 on 2026-07-09",
+  "models": {
+    "chat": {
+      "gpt-5.5": {"name": "GPT-5.5", "route": "chat", "tested": false},
+      "claude-opus-4-8": {"name": "Claude Opus 4.8", "route": "chat", "tested": false},
+      "gemini-3-flash-preview": {"name": "Gemini 3 Flash Preview", "route": "chat", "tested": false},
+      "gemini-3.5-flash": {"name": "Gemini 3.5 Flash", "route": "chat", "tested": false},
+      "gemini-3.1-pro-preview": {"name": "Gemini 3.1 Pro Preview", "route": "chat", "tested": false}
+    },
+    "image": {
+      "gpt-image-2": {"name": "GPT Image 2", "route": "image_openai", "tested": true},
+      "gemini-3-pro-image-preview": {"name": "Gemini 3 Pro Image Preview", "route": "image_chat", "tested": false},
+      "gemini-3.1-flash-image-preview": {"name": "Gemini 3.1 Flash Image Preview", "route": "image_chat", "tested": true},
+      "doubao-seedream-4-5-251128": {"name": "Doubao Seedream 4.5", "route": "image_chat", "tested": false}
+    },
+    "video": {
+      "doubao-seedance-2-0-260128": {"name": "Doubao Seedance 2.0", "route": "video", "tested": false},
+      "doubao-seedance-2-0-fast-260128": {"name": "Doubao Seedance 2.0 Fast", "route": "video", "tested": false},
+      "doubao-seedance-2-0-mini-260615": {"name": "Doubao Seedance 2.0 Mini", "route": "video", "tested": true},
+      "grok-imagine-1.5-video": {"name": "Grok Imagine 1.5 Video", "route": "video", "tested": false}
+    }
+  }
+}
