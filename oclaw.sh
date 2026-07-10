@@ -40,7 +40,7 @@ CHAT OPTIONS:
 
 ENVIRONMENT:
   OCLAW_API_KEY             API key (required)
-  OCLAW_BASE_URL            override API base (default https://octer.ai/v1;
+  OCLAW_BASE_URL            override API base (default https://oclaw.octer.ai/v1;
                             also settable as "base_url" in config.json)
 
 EXAMPLES:

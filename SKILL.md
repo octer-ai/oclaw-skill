@@ -95,7 +95,7 @@ Copy `config.example.json` to `config.json` (gitignored) to override defaults:
 
 ```json
 {
-  "base_url": "https://octer.ai/v1",
+  "base_url": "https://oclaw.octer.ai/v1",
   "defaults": {
     "image": "gpt-image-2",
     "video": "doubao-seedance-2-0-260128",
@@ -104,7 +104,7 @@ Copy `config.example.json` to `config.json` (gitignored) to override defaults:
 }
 ```
 
-Base URL priority: `OCLAW_BASE_URL` env > `config.json` `base_url` > `https://octer.ai/v1`.
+Base URL priority: `OCLAW_BASE_URL` env > `config.json` `base_url` > `https://oclaw.octer.ai/v1`.
 Point it at a staging gateway (e.g. `https://test.octer.ai/v1`) via either mechanism.
 
 ## File Storage
@@ -123,7 +123,7 @@ Both directories are gitignored. Video CDN links expire (~24h), so files are dow
 | Variable | Required | Purpose |
 |---|---|---|
 | `OCLAW_API_KEY` | Yes | Authenticates all requests to the octer.ai gateway |
-| `OCLAW_BASE_URL` | No | Override the gateway base URL (default `https://octer.ai/v1`) |
+| `OCLAW_BASE_URL` | No | Override the gateway base URL (default `https://oclaw.octer.ai/v1`) |
 
 ### External Endpoints
 

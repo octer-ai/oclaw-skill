@@ -56,12 +56,12 @@ text-to-video at the default length. Flags are kept for forward-compatibility.
 
 ```json
 {
-  "base_url": "https://octer.ai/v1",
+  "base_url": "https://oclaw.octer.ai/v1",
   "defaults": {"image": "gpt-image-2", "video": "doubao-seedance-2-0-260128", "chat": "gpt-5.5"}
 }
 ```
 
-Base URL priority: `OCLAW_BASE_URL` env > `config.json` > default `https://octer.ai/v1`.
+Base URL priority: `OCLAW_BASE_URL` env > `config.json` > default `https://oclaw.octer.ai/v1`.
 
 ## Architecture
 

@@ -36,7 +36,7 @@ class ResolveBaseUrl(unittest.TestCase):
         )
 
     def test_default_fallback(self):
-        self.assertEqual(common.resolve_base_url(None, {}), "https://octer.ai/v1")
+        self.assertEqual(common.resolve_base_url(None, {}), "https://oclaw.octer.ai/v1")
 
 
 class ExtractDataUris(unittest.TestCase):

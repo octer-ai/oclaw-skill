@@ -3,7 +3,7 @@
 
 Security manifest:
   Env vars:  OCLAW_API_KEY (required), OCLAW_BASE_URL (optional override)
-  Endpoints: <base_url>/* (octer.ai gateway; default https://octer.ai/v1)
+  Endpoints: <base_url>/* (octer.ai gateway; default https://oclaw.octer.ai/v1)
              pre-signed CDN URLs returned by the API (GET, download only, no auth sent)
   File I/O:  writes media under <skill-root>/images/ and <skill-root>/videos/
   No data is sent to any endpoint other than those listed above.
@@ -20,7 +20,7 @@ import urllib.request
 from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_BASE_URL = "https://octer.ai/v1"
+DEFAULT_BASE_URL = "https://oclaw.octer.ai/v1"
 USER_AGENT = "oclaw-skill/1.0"  # Cloudflare 会拦默认的 Python-urllib UA(error 1010)
 
 DEFAULT_MODELS = {
