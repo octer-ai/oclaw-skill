@@ -30,9 +30,9 @@ export OCLAW_API_KEY="sk-..."
 | Command | What it does |
 |---|---|
 | `generate-image <prompt>` | Generate image(s); `--model`, `--aspect`, `--n` |
-| `generate-video <prompt>` | Async video; `--model`, `--image` (i2v), `--duration`, `--max-wait` |
+| `generate-video <prompt>` | Async video; `--model`, `--image` (i2v), `--duration`, `--aspect`, `--resolution`, `--max-wait` |
 | `chat <prompt>` | Chat completion; `--model`, `--system` |
-| `watch <task-id>` | Resume a video task |
+| `watch <task-id>` | Resume a video task; `--model` |
 | `models` | List catalog; `--json`, `--category` |
 | `status` | Local task history |
 
@@ -43,12 +43,13 @@ See `./oclaw.sh models` for the live catalog (✓ = verified against the API).
 | Category | Models |
 |---|---|
 | image | gpt-image-2 (default), gemini-3-pro-image-preview, gemini-3.1-flash-image-preview |
-| video | doubao-seedance-2-0 (default) / -fast / -mini, grok-imagine-1.5-video |
-| chat | gpt-5.5 (default), claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro |
+| video | doubao-seedance-2-0 (default) / -fast / -mini, grok-imagine-video |
+| chat | gpt-5.5 (default), gpt-5.6-sol / -terra / -luna, claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro |
 
-**Known gateway limitations (2026-07-09):** the test gateway accepts but ignores the
-reference-image (`--image`) and `--duration` parameters for video — outputs come back
-text-to-video at the default length. Flags are kept for forward-compatibility.
+**Video caveats:** `--image` (image-to-video) works only on the doubao-seedance route;
+the grok route rejects it rather than silently dropping it. The grok channel is served
+by an aggregator rather than xAI itself, so `1080p` is downgraded to `720p` and
+duration is clamped into 6–30s — the skill warns before submitting.
 
 ## Configuration
 
@@ -56,12 +57,12 @@ text-to-video at the default length. Flags are kept for forward-compatibility.
 
 ```json
 {
-  "base_url": "https://oclaw.octer.ai/v1",
+  "base_url": "https://oclaw.octer.ai",
   "defaults": {"image": "gpt-image-2", "video": "doubao-seedance-2-0-260128", "chat": "gpt-5.5"}
 }
 ```
 
-Base URL priority: `OCLAW_BASE_URL` env > `config.json` > default `https://oclaw.octer.ai/v1`.
+Base URL priority: `OCLAW_BASE_URL` env > `config.json` > default `https://oclaw.octer.ai`.
 
 ## Architecture
 
@@ -82,12 +83,19 @@ oclaw-skill/
 
 How routing works: each model in `models.json` carries a `route` —
 
-| route | endpoint | image comes back as |
+| route | endpoint | result comes back as |
 |---|---|---|
-| `chat` | `POST /chat/completions` | (text reply) |
-| `image_chat` | `POST /chat/completions` | `![image](data:image/png;base64,...)` in the message |
-| `image_openai` | `POST /images/generations` | `data[].b64_json` |
-| `video` | `POST /video/generations` + `GET /videos/{id}` | pre-signed MP4 URL in `metadata.url` |
+| `chat` | `POST /v1/chat/completions` | text reply |
+| `image_openai` | `POST /v1/images/generations` | `data[].b64_json` |
+| `image_gemini` | `POST /v1beta/models/{model}:generateContent` | `candidates[].content.parts[].inlineData.data` |
+| `video_volcengine` | `POST /volcengine/api/v3/contents/generations/tasks` + `GET .../tasks/{id}` | pre-signed MP4 URL in `content.video_url` |
+| `video_xai` | `POST /xai/v1/videos/generations` + `GET /xai/v1/videos/{id}` | pre-signed MP4 URL in `video.url` |
+
+Each model speaks its vendor's native format rather than a lowest-common-denominator
+one: chat and OpenAI images go through the OpenAI-compatible surface, Gemini images
+through Gemini's `generateContent` (authenticated with `x-goog-api-key`), and the two
+video vendors through their own async-task APIs, whose status vocabularies
+(`succeeded` vs `done`) the skill normalises to a single local one.
 
 ## Development
 

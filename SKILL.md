@@ -60,18 +60,31 @@ Output ends with `MEDIA: <path>` lines pointing at saved PNGs in `images/`.
 ### generate-video
 
 ```
-./oclaw.sh generate-video <prompt> [--model <name>] [--image <path|url>] [--duration <sec>] [--max-wait <sec>]
+./oclaw.sh generate-video <prompt> [--model <name>] [--image <path|url>] [--duration <sec>]
+                                   [--aspect <ratio>] [--resolution <res>] [--max-wait <sec>]
 ```
 
 - default model: `doubao-seedance-2-0-260128`
-- `--image`: reference image for image-to-video (local file or URL)
+- `--image`: reference image for image-to-video (local file or URL) — **doubao-seedance only**; the grok route rejects it rather than silently dropping it
 - async: submits a task, polls until done (typically 1–3 min), downloads the MP4 to `videos/`
 - on timeout the task keeps running server-side — resume with `./oclaw.sh watch <task-id>`
 
-> **Known gateway limitation (2026-07-09):** the test gateway accepts but currently
-> ignores `--image` and `--duration` (videos come back text-to-video at the default
-> length). The flags are kept for forward-compatibility; a note is printed when you
-> use `--image` so you remember to verify the output.
+Each model speaks its vendor's own async-task format, and the two differ in every
+respect that matters — submit body, status vocabulary, and where the URL lands:
+
+| | doubao-seedance (`video_volcengine`) | grok (`video_xai`) |
+|---|---|---|
+| submit | `POST /volcengine/api/v3/contents/generations/tasks` → `{id}` | `POST /xai/v1/videos/generations` → `{request_id}` |
+| poll | `GET .../tasks/{id}` | `GET /xai/v1/videos/{id}` |
+| terminal status | `succeeded` / `failed` | `done` / `failed` / `expired` |
+| video URL | `content.video_url` | `video.url` |
+
+Both are normalised to `queued`/`running`/`completed`/`failed` in the local task state.
+
+> **Grok upstream limits:** the grok channel is served by an aggregator rather than
+> xAI itself, so some xAI-legal values get coerced — `1080p` is downgraded to `720p`,
+> and duration is clamped into 6–30s. The skill warns before submitting instead of
+> letting the output surprise you.
 
 ### chat
 
@@ -84,10 +97,13 @@ Output ends with `MEDIA: <path>` lines pointing at saved PNGs in `images/`.
 ### watch / status / models
 
 ```
-./oclaw.sh watch <task-id> [--max-wait <sec>]   # resume a video task
-./oclaw.sh status                               # local task history
+./oclaw.sh watch <task-id> [--model <name>] [--max-wait <sec>]   # resume a video task
+./oclaw.sh status                                                # local task history
 ./oclaw.sh models [--json] [--category image|video|chat]
 ```
+
+Both vendors mint `task_...` ids, so `watch` recovers the vendor from the model
+recorded in `.task-state.json`. Pass `--model` if the task isn't in the local history.
 
 ## Configuration
 
@@ -95,7 +111,7 @@ Copy `config.example.json` to `config.json` (gitignored) to override defaults:
 
 ```json
 {
-  "base_url": "https://oclaw.octer.ai/v1",
+  "base_url": "https://oclaw.octer.ai",
   "defaults": {
     "image": "gpt-image-2",
     "video": "doubao-seedance-2-0-260128",
@@ -104,8 +120,8 @@ Copy `config.example.json` to `config.json` (gitignored) to override defaults:
 }
 ```
 
-Base URL priority: `OCLAW_BASE_URL` env > `config.json` `base_url` > `https://oclaw.octer.ai/v1`.
-Point it at a staging gateway (e.g. `https://test.octer.ai/v1`) via either mechanism.
+Base URL priority: `OCLAW_BASE_URL` env > `config.json` `base_url` > `https://oclaw.octer.ai`.
+Point it at a staging gateway (e.g. `https://test.octer.ai`) via either mechanism.
 
 ## File Storage
 
@@ -123,23 +139,30 @@ Both directories are gitignored. Video CDN links expire (~24h), so files are dow
 | Variable | Required | Purpose |
 |---|---|---|
 | `OCLAW_API_KEY` | Yes | Authenticates all requests to the octer.ai gateway |
-| `OCLAW_BASE_URL` | No | Override the gateway base URL (default `https://oclaw.octer.ai/v1`) |
+| `OCLAW_BASE_URL` | No | Override the gateway base URL (default `https://oclaw.octer.ai`) |
 
 ### External Endpoints
 
-| Endpoint | Method | Data Sent | Used By |
-|---|---|---|---|
-| `<base>/chat/completions` | POST | prompt, optional system text, model | `chat.py`, `generate_image.py` (image_chat route) |
-| `<base>/images/generations` | POST | prompt, model, n, size | `generate_image.py` (image_openai route) |
-| `<base>/video/generations` | POST | prompt, model, optional reference image, duration | `generate_video.py` |
-| `<base>/videos/{task_id}` | GET | task id | `generate_video.py`, `watch_task.py` |
-| pre-signed CDN URLs | GET | — (no auth header sent) | video download |
+| Endpoint | Method | Auth | Data Sent | Used By |
+|---|---|---|---|---|
+| `<base>/v1/chat/completions` | POST | Bearer | prompt, optional system text, model | `chat.py` |
+| `<base>/v1/images/generations` | POST | Bearer | prompt, model, n, size | `generate_image.py` (image_openai) |
+| `<base>/v1beta/models/{model}:generateContent` | POST | `x-goog-api-key` | prompt, response modalities | `generate_image.py` (image_gemini) |
+| `<base>/volcengine/api/v3/contents/generations/tasks` | POST | Bearer | prompt, model, optional reference image, duration, ratio, resolution | `generate_video.py` (video_volcengine) |
+| `<base>/volcengine/api/v3/contents/generations/tasks/{id}` | GET | Bearer | task id | `generate_video.py`, `watch_task.py` |
+| `<base>/xai/v1/videos/generations` | POST | Bearer | prompt, model, duration, aspect ratio, resolution | `generate_video.py` (video_xai) |
+| `<base>/xai/v1/videos/{request_id}` | GET | Bearer | task id | `generate_video.py`, `watch_task.py` |
+| pre-signed CDN URLs | GET | — (no auth header sent) | — | video download |
+
+All of the above are paths on the single configured gateway host. The API key is sent
+as `Authorization: Bearer` everywhere except the Gemini-native image route, which the
+gateway authenticates with `x-goog-api-key` — the same key, a different header.
 
 ### Data Leaving This Machine
 
 - **Prompt text** (and optional system text) is sent to the configured octer.ai gateway.
 - **Reference images** (for image-to-video) are sent to the gateway inline as base64.
-- **API key** is sent as an `Authorization: Bearer` header to the gateway only — never to CDN hosts, never logged, never written to disk by this skill.
+- **API key** is sent to the gateway only (as `Authorization: Bearer`, or as `x-goog-api-key` on the Gemini-native image route) — never to CDN hosts, never logged, never written to disk by this skill.
 - No telemetry, analytics, or usage data is collected by this skill.
 
 ### Trust Statement
