@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-07-09",
-  "source": "Probed against https://test.octer.ai/v1 on 2026-07-09",
+  "lastUpdated": "2026-07-13",
+  "source": "Aligned with the new-api direct-access doc (vendor-native formats, 15/15 verified against the new-api instance on 2026-07-12). Not re-verified from this machine: the token available here was rejected by the public gateway.",
   "models": {
     "chat": {
       "gpt-5.5": {
@@ -8,25 +8,41 @@
         "route": "chat",
         "tested": true
       },
+      "gpt-5.6-sol": {
+        "name": "GPT-5.6 Sol",
+        "route": "chat",
+        "tested": true
+      },
+      "gpt-5.6-terra": {
+        "name": "GPT-5.6 Terra",
+        "route": "chat",
+        "tested": true
+      },
+      "gpt-5.6-luna": {
+        "name": "GPT-5.6 Luna",
+        "route": "chat",
+        "tested": true
+      },
       "claude-opus-4-8": {
         "name": "Claude Opus 4.8",
         "route": "chat",
-        "tested": false
+        "tested": true,
+        "note": "Upstream verification used the Anthropic Messages format; this skill calls it through the OpenAI-compatible /v1/chat/completions route"
       },
-      "gemini-3-flash-preview": {
-        "name": "Gemini 3 Flash Preview",
+      "gemini-3.1-pro-preview": {
+        "name": "Gemini 3.1 Pro Preview",
         "route": "chat",
-        "tested": false
+        "tested": true
       },
       "gemini-3.5-flash": {
         "name": "Gemini 3.5 Flash",
         "route": "chat",
         "tested": true
       },
-      "gemini-3.1-pro-preview": {
-        "name": "Gemini 3.1 Pro Preview",
+      "gemini-3-flash-preview": {
+        "name": "Gemini 3 Flash Preview",
         "route": "chat",
-        "tested": false
+        "tested": true
       }
     },
     "image": {
@@ -37,36 +53,36 @@
       },
       "gemini-3-pro-image-preview": {
         "name": "Gemini 3 Pro Image Preview",
-        "route": "image_chat",
-        "tested": false
+        "route": "image_gemini",
+        "tested": true
       },
       "gemini-3.1-flash-image-preview": {
         "name": "Gemini 3.1 Flash Image Preview",
-        "route": "image_chat",
+        "route": "image_gemini",
         "tested": true
       }
     },
     "video": {
       "doubao-seedance-2-0-260128": {
         "name": "Doubao Seedance 2.0",
-        "route": "video",
-        "tested": false
+        "route": "video_volcengine",
+        "tested": true
       },
       "doubao-seedance-2-0-fast-260128": {
         "name": "Doubao Seedance 2.0 Fast",
-        "route": "video",
-        "tested": false
+        "route": "video_volcengine",
+        "tested": true
       },
       "doubao-seedance-2-0-mini-260615": {
         "name": "Doubao Seedance 2.0 Mini",
-        "route": "video",
-        "tested": true,
-        "note": "Verified text-to-video. As of 2026-07-09 the test gateway accepts but ignores reference-image fields (image/image_url/first_frame_image) and duration"
-      },
-      "grok-imagine-1.5-video": {
-        "name": "Grok Imagine 1.5 Video",
-        "route": "video",
+        "route": "video_volcengine",
         "tested": true
+      },
+      "grok-imagine-video": {
+        "name": "Grok Imagine Video",
+        "route": "video_xai",
+        "tested": true,
+        "note": "Upstream is an aggregator, not xAI itself: 1080p is downgraded to 720p and duration is clamped to 6-30s"
       }
     }
   }

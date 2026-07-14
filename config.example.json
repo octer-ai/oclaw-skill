@@ -1,5 +1,5 @@
 {
-  "base_url": "https://oclaw.octer.ai/v1",
+  "base_url": "https://oclaw.octer.ai",
   "defaults": {
     "image": "gpt-image-2",
     "video": "doubao-seedance-2-0-260128",

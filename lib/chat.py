@@ -3,7 +3,7 @@
 
 Security manifest:
   Env vars:  OCLAW_API_KEY (required), OCLAW_BASE_URL (optional)
-  Endpoints: POST <base>/chat/completions (sends prompt + optional system text)
+  Endpoints: POST <base>/v1/chat/completions (sends prompt + optional system text)
   File I/O:  none
 """
 
@@ -34,7 +34,7 @@ def main():
     print(f"💬 {model_id} ...", file=sys.stderr)
 
     result = common.api_request(
-        "POST", "/chat/completions",
+        "POST", "/v1/chat/completions",
         {"model": model_id, "messages": build_messages(args.prompt, args.system)},
         timeout=300,
     )

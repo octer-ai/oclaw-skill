@@ -3,7 +3,7 @@
 
 Security manifest:
   Env vars:  OCLAW_API_KEY (required), OCLAW_BASE_URL (optional override)
-  Endpoints: <base_url>/* (octer.ai gateway; default https://oclaw.octer.ai/v1)
+  Endpoints: <base_url>/v1/* (octer.ai gateway; default https://oclaw.octer.ai)
              pre-signed CDN URLs returned by the API (GET, download only, no auth sent)
   File I/O:  writes media under <skill-root>/images/ and <skill-root>/videos/
   No data is sent to any endpoint other than those listed above.
@@ -20,7 +20,7 @@ import urllib.request
 from pathlib import Path
 
 SKILL_ROOT = Path(__file__).resolve().parent.parent
-DEFAULT_BASE_URL = "https://oclaw.octer.ai/v1"
+DEFAULT_BASE_URL = "https://oclaw.octer.ai"
 USER_AGENT = "oclaw-skill/1.0"  # Cloudflare 会拦默认的 Python-urllib UA(error 1010)
 
 DEFAULT_MODELS = {
@@ -45,8 +45,16 @@ def load_config():
 
 
 def resolve_base_url(env_value, config):
-    """Priority: OCLAW_BASE_URL env > config.json base_url > production default."""
-    return (env_value or config.get("base_url") or DEFAULT_BASE_URL).rstrip("/")
+    """Priority: OCLAW_BASE_URL env > config.json base_url > production default.
+
+    The base is the gateway root, not the OpenAI prefix: the gateway also serves
+    /v1beta, /volcengine and /xai, and each call site supplies its own prefix.
+    A trailing /v1 is dropped so bases written for the older convention still work.
+    """
+    url = (env_value or config.get("base_url") or DEFAULT_BASE_URL).rstrip("/")
+    if url.endswith("/v1"):
+        url = url[: -len("/v1")]
+    return url
 
 
 def base_url():
@@ -62,13 +70,25 @@ def get_api_key():
     return key
 
 
-def api_request(method, endpoint, data=None, timeout=300):
-    """Authenticated JSON request to the gateway; returns parsed JSON, exits on error."""
+def auth_headers(key, auth="bearer"):
+    """Gemini's native /v1beta route authenticates with x-goog-api-key, not Bearer."""
+    if auth == "goog":
+        return {"x-goog-api-key": key}
+    return {"Authorization": f"Bearer {key}"}
+
+
+def api_request(method, endpoint, data=None, timeout=300, auth="bearer"):
+    """Authenticated JSON request to the gateway; returns parsed JSON, exits on error.
+
+    endpoint carries its own prefix (/v1, /v1beta, /volcengine, /xai) since the
+    base is the gateway root.
+    """
     url = f"{base_url()}{endpoint}"
     headers = {
-        "Authorization": f"Bearer {get_api_key()}",
         "Content-Type": "application/json",
+        "Accept": "application/json",
         "User-Agent": USER_AGENT,
+        **auth_headers(get_api_key(), auth),
     }
     body = json.dumps(data).encode("utf-8") if data is not None else None
     req = urllib.request.Request(url, data=body, headers=headers, method=method)
