@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-07-13",
-  "source": "Aligned with the new-api direct-access doc (vendor-native formats, 15/15 verified against the new-api instance on 2026-07-12). Not re-verified from this machine: the token available here was rejected by the public gateway.",
+  "lastUpdated": "2026-08-12",
+  "source": "Aligned with the new-api direct-access doc. The original 15 models were verified against the new-api instance on 2026-07-12; Doubao Seedance 2.5 was added as tested on 2026-08-12. Not re-verified from this machine: the token available here was rejected by the public gateway.",
   "models": {
     "chat": {
       "gpt-5.5": {
@@ -63,6 +63,11 @@
       }
     },
     "video": {
+      "doubao-seedance-2-5-260628": {
+        "name": "Doubao Seedance 2.5",
+        "route": "video_volcengine",
+        "tested": true
+      },
       "doubao-seedance-2-0-260128": {
         "name": "Doubao Seedance 2.0",
         "route": "video_volcengine",

@@ -8,7 +8,7 @@ Unified access to [octer.ai](https://octer.ai)'s OpenAI-compatible gateway — i
 ## Features
 
 - 🎨 **Image**: GPT Image 2, Gemini 3/3.1 image models (dual API routing handled automatically)
-- 🎬 **Video**: Doubao Seedance 2.0 family, Grok Imagine — async tasks with auto-poll and resume
+- 🎬 **Video**: Doubao Seedance 2.0/2.5, Grok Imagine — async tasks with auto-poll and resume
 - 💬 **Chat**: GPT-5.5, Claude Opus 4.8, Gemini 3.x
 - 💾 Media saved locally to `images/` / `videos/`; no cloud uploads
 - 🧩 Zero dependencies beyond Python 3 stdlib
@@ -40,10 +40,18 @@ export OCLAW_API_KEY="sk-..."
 
 See `./oclaw.sh models` for the live catalog (✓ = verified against the API).
 
+While handling a normal command, the skill checks the official GitHub
+`master/models.json` if it has not checked within the last 7 days, then keeps the
+newest valid catalog in `~/.cache/oclaw-skill/models.json`. There is no background
+job. Sync failures are silent and fall back to the cached or bundled catalog, so
+normal generation does not require GitHub to be available. Set
+`OCLAW_MODEL_SYNC=0` to disable remote checks, or `OCLAW_MODEL_CACHE_DIR` to move
+the cache directory.
+
 | Category | Models |
 |---|---|
 | image | gpt-image-2 (default), gemini-3-pro-image-preview, gemini-3.1-flash-image-preview |
-| video | doubao-seedance-2-0 (default) / -fast / -mini, grok-imagine-video |
+| video | doubao-seedance-2-0 (default) / -fast / -mini, doubao-seedance-2-5-260628, grok-imagine-video |
 | chat | gpt-5.5 (default), gpt-5.6-sol / -terra / -luna, claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro |
 
 **Video caveats:** `--image` (image-to-video) works only on the doubao-seedance route;

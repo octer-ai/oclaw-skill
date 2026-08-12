@@ -4,8 +4,11 @@
 Security manifest:
   Env vars:  OCLAW_API_KEY (required), OCLAW_BASE_URL (optional override)
   Endpoints: <base_url>/v1/* (octer.ai gateway; default https://oclaw.octer.ai)
+             raw.githubusercontent.com/octer-ai/oclaw-skill/master/models.json
+             (GET only; no API key, prompt, or auth header is sent)
              pre-signed CDN URLs returned by the API (GET, download only, no auth sent)
   File I/O:  writes media under <skill-root>/images/ and <skill-root>/videos/
+             caches the model catalog under ~/.cache/oclaw-skill/ by default
   No data is sent to any endpoint other than those listed above.
 """
 
@@ -22,6 +25,18 @@ from pathlib import Path
 SKILL_ROOT = Path(__file__).resolve().parent.parent
 DEFAULT_BASE_URL = "https://oclaw.octer.ai"
 USER_AGENT = "oclaw-skill/1.0"  # Cloudflare 会拦默认的 Python-urllib UA(error 1010)
+MODEL_CATALOG_URL = (
+    "https://raw.githubusercontent.com/octer-ai/oclaw-skill/master/models.json"
+)
+MODEL_SYNC_INTERVAL_SECONDS = 7 * 24 * 60 * 60
+MODEL_SYNC_TIMEOUT_SECONDS = 5
+MODEL_CATALOG_MAX_BYTES = 1024 * 1024
+
+KNOWN_MODEL_ROUTES = {
+    "chat": {"chat"},
+    "image": {"image_openai", "image_gemini"},
+    "video": {"video_volcengine", "video_xai"},
+}
 
 DEFAULT_MODELS = {
     "image": "gpt-image-2",
@@ -108,9 +123,136 @@ def api_request(method, endpoint, data=None, timeout=300, auth="bearer"):
         sys.exit(1)
 
 
-def load_models():
-    with open(SKILL_ROOT / "models.json") as f:
-        return json.load(f)
+def _validate_model_catalog(data):
+    """Reject malformed catalogs and routes this installed code cannot dispatch."""
+    if not isinstance(data, dict) or not isinstance(data.get("models"), dict):
+        raise ValueError("model catalog must contain a models object")
+    if not isinstance(data.get("lastUpdated"), str):
+        raise ValueError("model catalog must contain a lastUpdated string")
+
+    categories = data["models"]
+    if set(categories) != set(KNOWN_MODEL_ROUTES):
+        raise ValueError("model catalog categories do not match this skill")
+    for category, routes in KNOWN_MODEL_ROUTES.items():
+        models = categories.get(category)
+        if not isinstance(models, dict) or not models:
+            raise ValueError("model category must be a non-empty object")
+        for model_id, info in models.items():
+            if not isinstance(model_id, str) or not model_id:
+                raise ValueError("model ids must be non-empty strings")
+            if not isinstance(info, dict) or not isinstance(info.get("name"), str):
+                raise ValueError("each model must contain a name")
+            if info.get("route") not in routes:
+                raise ValueError("model route is not supported by this skill")
+    return data
+
+
+def _read_model_catalog(path):
+    try:
+        with open(path) as f:
+            return _validate_model_catalog(json.load(f))
+    except (OSError, ValueError, TypeError):
+        return None
+
+
+def _model_cache_dir():
+    override = os.getenv("OCLAW_MODEL_CACHE_DIR")
+    if override:
+        return Path(override).expanduser()
+    xdg_cache = os.getenv("XDG_CACHE_HOME")
+    base = Path(xdg_cache).expanduser() if xdg_cache else Path.home() / ".cache"
+    return base / "oclaw-skill"
+
+
+def _model_sync_enabled():
+    value = os.getenv("OCLAW_MODEL_SYNC", "1").strip().lower()
+    return value not in {"0", "false", "no", "off"}
+
+
+def _sync_due(marker_path):
+    try:
+        age = time.time() - marker_path.stat().st_mtime
+        return age >= MODEL_SYNC_INTERVAL_SECONDS
+    except OSError:
+        return True
+
+
+def _mark_sync_attempt(marker_path):
+    try:
+        marker_path.parent.mkdir(parents=True, exist_ok=True)
+        marker_path.touch()
+    except OSError:
+        pass
+
+
+def _write_model_cache(cache_path, data):
+    """Atomically replace the cache so interrupted writes cannot corrupt it."""
+    temp_path = cache_path.with_name(
+        ".{0}.{1}.tmp".format(cache_path.name, os.getpid())
+    )
+    try:
+        cache_path.parent.mkdir(parents=True, exist_ok=True)
+        with open(temp_path, "w") as f:
+            json.dump(data, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        os.replace(str(temp_path), str(cache_path))
+    finally:
+        try:
+            temp_path.unlink()
+        except OSError:
+            pass
+
+
+def _fetch_model_catalog():
+    """Fetch the public catalog without forwarding gateway credentials."""
+    req = urllib.request.Request(
+        MODEL_CATALOG_URL,
+        headers={"Accept": "application/json", "User-Agent": USER_AGENT},
+        method="GET",
+    )
+    with urllib.request.urlopen(req, timeout=MODEL_SYNC_TIMEOUT_SECONDS) as resp:
+        body = resp.read(MODEL_CATALOG_MAX_BYTES + 1)
+    if len(body) > MODEL_CATALOG_MAX_BYTES:
+        raise ValueError("remote model catalog is too large")
+    return _validate_model_catalog(json.loads(body.decode("utf-8")))
+
+
+def _newest_model_catalog(*catalogs):
+    valid = [catalog for catalog in catalogs if catalog is not None]
+    if not valid:
+        raise ValueError("no valid model catalog is available")
+    newest = valid[0]
+    for catalog in valid[1:]:
+        if catalog["lastUpdated"] >= newest["lastUpdated"]:
+            newest = catalog
+    return newest
+
+
+def load_models(sync=True):
+    """Load the newest valid bundled/cached catalog and refresh GitHub weekly."""
+    bundled = _read_model_catalog(SKILL_ROOT / "models.json")
+    if bundled is None:
+        raise ValueError("bundled models.json is missing or invalid")
+
+    cache_dir = _model_cache_dir()
+    cache_path = cache_dir / "models.json"
+    marker_path = cache_dir / ".last-model-sync"
+    cached = _read_model_catalog(cache_path)
+    fetched = None
+
+    if sync and _model_sync_enabled() and _sync_due(marker_path):
+        try:
+            fetched = _fetch_model_catalog()
+            try:
+                _write_model_cache(cache_path, fetched)
+            except OSError:
+                pass
+        except (OSError, ValueError, TypeError, UnicodeError, urllib.error.URLError):
+            pass
+        finally:
+            _mark_sync_attempt(marker_path)
+
+    return _newest_model_catalog(bundled, cached, fetched)
 
 
 def load_defaults():
