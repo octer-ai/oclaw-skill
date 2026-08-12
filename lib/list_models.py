@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Print the model catalog from models.json. Local file only, no network."""
+"""Print the model catalog, refreshing its public GitHub cache when due."""
 
 import argparse
 import json

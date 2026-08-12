@@ -27,7 +27,7 @@ Unified access to image generation, video generation, and chat through octer.ai'
 ## Features
 
 - 🎨 **Image Generation**: GPT Image 2, Gemini 3/3.1 image models — dual API routing handled automatically
-- 🎬 **Video Generation**: Doubao Seedance 2.0 (quality/fast/mini), Grok Imagine — async with auto-polling, resume via `watch`
+- 🎬 **Video Generation**: Doubao Seedance 2.0/2.5, Grok Imagine — async with auto-polling, resume via `watch`
 - 💬 **Chat**: GPT-5.5, Claude Opus 4.8, Gemini 3.x
 - 💾 **Local Storage**: media saved to `images/` and `videos/` before anything else
 - 🔁 **Task Resume**: interrupted video tasks resumable by task id
@@ -123,6 +123,12 @@ Copy `config.example.json` to `config.json` (gitignored) to override defaults:
 Base URL priority: `OCLAW_BASE_URL` env > `config.json` `base_url` > `https://oclaw.octer.ai`.
 Point it at a staging gateway (e.g. `https://test.octer.ai`) via either mechanism.
 
+When a command needs the model catalog, the skill checks the official GitHub
+`master/models.json` if no check has run in the previous 7 days. This happens
+only during command use; there is no background process. The newest valid result
+is cached locally, and any network or validation failure falls back to the cache or
+the bundled `models.json`.
+
 ## File Storage
 
 ```
@@ -140,6 +146,8 @@ Both directories are gitignored. Video CDN links expire (~24h), so files are dow
 |---|---|---|
 | `OCLAW_API_KEY` | Yes | Authenticates all requests to the octer.ai gateway |
 | `OCLAW_BASE_URL` | No | Override the gateway base URL (default `https://oclaw.octer.ai`) |
+| `OCLAW_MODEL_SYNC` | No | Set to `0` to disable the weekly GitHub model-catalog check |
+| `OCLAW_MODEL_CACHE_DIR` | No | Override the model cache directory (default `~/.cache/oclaw-skill`) |
 
 ### External Endpoints
 
@@ -152,6 +160,7 @@ Both directories are gitignored. Video CDN links expire (~24h), so files are dow
 | `<base>/volcengine/api/v3/contents/generations/tasks/{id}` | GET | Bearer | task id | `generate_video.py`, `watch_task.py` |
 | `<base>/xai/v1/videos/generations` | POST | Bearer | prompt, model, duration, aspect ratio, resolution | `generate_video.py` (video_xai) |
 | `<base>/xai/v1/videos/{request_id}` | GET | Bearer | task id | `generate_video.py`, `watch_task.py` |
+| `raw.githubusercontent.com/octer-ai/oclaw-skill/master/models.json` | GET | — | No request body | `common.py` (at most once per 7 days) |
 | pre-signed CDN URLs | GET | — (no auth header sent) | — | video download |
 
 All of the above are paths on the single configured gateway host. The API key is sent
@@ -163,11 +172,15 @@ gateway authenticates with `x-goog-api-key` — the same key, a different header
 - **Prompt text** (and optional system text) is sent to the configured octer.ai gateway.
 - **Reference images** (for image-to-video) are sent to the gateway inline as base64.
 - **API key** is sent to the gateway only (as `Authorization: Bearer`, or as `x-goog-api-key` on the Gemini-native image route) — never to CDN hosts, never logged, never written to disk by this skill.
+- **Model sync** sends an unauthenticated GET to the official GitHub raw-content host; no API key, prompt, task data, or request body is included.
 - No telemetry, analytics, or usage data is collected by this skill.
 
 ### Trust Statement
 
-This skill sends data to one third-party service: the configured octer.ai gateway. Review that service's privacy policy before use. Generated media is stored locally only.
+This skill sends generation data to one third-party service: the configured octer.ai
+gateway. It also retrieves the public model catalog from GitHub at most once per 7
+days without sending credentials or generation data. Review those services' privacy
+policies before use. Generated media is stored locally only.
 
 ### Autonomous Invocation
 

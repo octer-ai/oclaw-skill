@@ -21,7 +21,7 @@ KNOWN_ROUTES = {
 
 class CatalogRoutes(unittest.TestCase):
     def setUp(self):
-        self.catalog = common.load_models()["models"]
+        self.catalog = common.load_models(sync=False)["models"]
 
     def test_every_route_is_implemented(self):
         for category, models in self.catalog.items():
