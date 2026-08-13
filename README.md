@@ -18,7 +18,7 @@ Unified access to [octer.ai](https://octer.ai)'s OpenAI-compatible gateway — i
 ```bash
 git clone <repo-url> && cd oclaw-skill
 chmod +x oclaw.sh lib/*.py
-export OCLAW_API_KEY="sk-..."
+export OCLAW_API_KEY="YOUR_OCLAW_API_KEY"
 
 ./oclaw.sh generate-image "A red apple on a wooden table"
 ./oclaw.sh generate-video "a cat walking in a garden" --model doubao-seedance-2-0-mini-260615

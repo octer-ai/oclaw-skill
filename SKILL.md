@@ -35,7 +35,7 @@ Unified access to image generation, video generation, and chat through octer.ai'
 ## Quick Start
 
 ```bash
-export OCLAW_API_KEY="sk-..."
+export OCLAW_API_KEY="YOUR_OCLAW_API_KEY"
 
 ./oclaw.sh generate-image "A serene Japanese garden at sunset"
 ./oclaw.sh generate-video "a cat walking in a garden" --model doubao-seedance-2-0-mini-260615
@@ -191,7 +191,7 @@ This skill can be invoked autonomously by an agent when asked to generate images
 ### "OCLAW_API_KEY not set"
 
 ```bash
-export OCLAW_API_KEY="sk-..."
+export OCLAW_API_KEY="YOUR_OCLAW_API_KEY"
 ```
 
 ### HTTP 403 "error code: 1010"

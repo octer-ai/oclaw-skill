@@ -80,7 +80,7 @@ def get_api_key():
     key = os.getenv("OCLAW_API_KEY")
     if not key:
         print("Error: OCLAW_API_KEY environment variable not set", file=sys.stderr)
-        print('Set it with: export OCLAW_API_KEY="sk-..."', file=sys.stderr)
+        print('Set it with: export OCLAW_API_KEY="YOUR_OCLAW_API_KEY"', file=sys.stderr)
         sys.exit(1)
     return key
 
