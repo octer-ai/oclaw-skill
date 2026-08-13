@@ -12,7 +12,7 @@ import generate_video
 MODELS = {
     "models": {
         "video": {
-            "doubao-seedance-2-0-260128": {"route": "video_volcengine"},
+            "seedance-2.0": {"route": "video_volcengine"},
             "grok-imagine-video": {"route": "video_xai"},
         }
     }
@@ -140,7 +140,7 @@ class RouteForTask(unittest.TestCase):
     def test_recovered_from_task_state(self):
         self.assertEqual(
             generate_video.route_for_task("task_1", models_data=MODELS,
-                                          task={"model": "doubao-seedance-2-0-260128"}),
+                                          task={"model": "seedance-2.0"}),
             "video_volcengine")
 
     def test_unknown_task_asks_for_the_model(self):

@@ -40,8 +40,16 @@ KNOWN_MODEL_ROUTES = {
 
 DEFAULT_MODELS = {
     "image": "gpt-image-2",
-    "video": "doubao-seedance-2-0-260128",
+    "video": "seedance-2.0",
     "chat": "gpt-5.5",
+}
+
+# Keep existing config.json files and explicit CLI invocations working after
+# gateway model IDs are renamed. Requests always use the current public ID.
+MODEL_ALIASES = {
+    "gemini-3-pro-image-preview": "gemini-3-pro-image",
+    "gemini-3.1-flash-image-preview": "gemini-3.1-flash-image",
+    "doubao-seedance-2-0-260128": "seedance-2.0",
 }
 
 _DATA_URI_RE = re.compile(r"data:image/(\w+);base64,([A-Za-z0-9+/=\s]+)")
@@ -80,7 +88,7 @@ def get_api_key():
     key = os.getenv("OCLAW_API_KEY")
     if not key:
         print("Error: OCLAW_API_KEY environment variable not set", file=sys.stderr)
-        print('Set it with: export OCLAW_API_KEY="sk-..."', file=sys.stderr)
+        print('Set it with: export OCLAW_API_KEY="YOUR_OCLAW_API_KEY"', file=sys.stderr)
         sys.exit(1)
     return key
 
@@ -269,6 +277,7 @@ def resolve_model(models_data, category, model_id, defaults):
     models = models_data.get("models", {}).get(category, {})
     if model_id is None:
         model_id = defaults[category]
+    model_id = MODEL_ALIASES.get(model_id, model_id)
     if model_id not in models:
         available = ", ".join(sorted(models))
         raise ValueError(

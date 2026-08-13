@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-12",
-  "source": "Aligned with the new-api direct-access doc. The original 15 models were verified against the new-api instance on 2026-07-12; Doubao Seedance 2.5 was added as tested on 2026-08-12. Not re-verified from this machine: the token available here was rejected by the public gateway.",
+  "lastUpdated": "2026-08-13",
+  "source": "Catalog IDs were reconciled with the test OClaw gateway /v1/models response and its enabled channels on 2026-08-13.",
   "models": {
     "chat": {
       "gpt-5.5": {
@@ -43,6 +43,21 @@
         "name": "Gemini 3 Flash Preview",
         "route": "chat",
         "tested": true
+      },
+      "deepseek-v4-flash": {
+        "name": "DeepSeek V4 Flash",
+        "route": "chat",
+        "tested": true
+      },
+      "deepseek-v4-pro": {
+        "name": "DeepSeek V4 Pro",
+        "route": "chat",
+        "tested": true
+      },
+      "glm-5.2": {
+        "name": "GLM-5.2",
+        "route": "chat",
+        "tested": true
       }
     },
     "image": {
@@ -51,13 +66,13 @@
         "route": "image_openai",
         "tested": true
       },
-      "gemini-3-pro-image-preview": {
-        "name": "Gemini 3 Pro Image Preview",
+      "gemini-3-pro-image": {
+        "name": "Gemini 3 Pro Image",
         "route": "image_gemini",
         "tested": true
       },
-      "gemini-3.1-flash-image-preview": {
-        "name": "Gemini 3.1 Flash Image Preview",
+      "gemini-3.1-flash-image": {
+        "name": "Gemini 3.1 Flash Image",
         "route": "image_gemini",
         "tested": true
       }
@@ -68,13 +83,8 @@
         "route": "video_volcengine",
         "tested": true
       },
-      "doubao-seedance-2-0-260128": {
-        "name": "Doubao Seedance 2.0",
-        "route": "video_volcengine",
-        "tested": true
-      },
-      "doubao-seedance-2-0-fast-260128": {
-        "name": "Doubao Seedance 2.0 Fast",
+      "seedance-2.0": {
+        "name": "Seedance 2.0",
         "route": "video_volcengine",
         "tested": true
       },

@@ -42,6 +42,30 @@ class CatalogRoutes(unittest.TestCase):
             with self.subTest(route=route):
                 self.assertIn(f'"{route}"', source)
 
+    def test_catalog_uses_current_public_gateway_ids(self):
+        expected = {
+            "chat": {"deepseek-v4-flash", "deepseek-v4-pro", "glm-5.2"},
+            "image": {"gemini-3-pro-image", "gemini-3.1-flash-image"},
+            "video": {"seedance-2.0", "grok-imagine-video"},
+        }
+        for category, model_ids in expected.items():
+            with self.subTest(category=category):
+                self.assertTrue(model_ids.issubset(self.catalog[category]))
+
+        retired = {
+            "gemini-3-pro-image-preview",
+            "gemini-3.1-flash-image-preview",
+            "doubao-seedance-2-0-260128",
+            "doubao-seedance-2-0-fast-260128",
+            "grok-imagine-1.5-video",
+        }
+        all_ids = {
+            model_id
+            for models in self.catalog.values()
+            for model_id in models
+        }
+        self.assertTrue(retired.isdisjoint(all_ids))
+
 
 if __name__ == "__main__":
     unittest.main()
