@@ -2,7 +2,7 @@
 name: oclaw
 version: 1.0.0
 description: |
-  Unified access to octer.ai's OpenAI-compatible gateway - image generation (GPT Image 2, Gemini image models), video generation (Doubao Seedance, Grok Imagine), and chat (GPT-5.5, Claude Opus 4.8, Gemini). Local storage, async task resume, model catalog.
+  Unified access to octer.ai's OpenAI-compatible gateway - image generation (GPT Image 2, Gemini image models), video generation (Doubao Seedance, Grok Imagine), and chat (GPT-5.5, Claude Opus 4.8, Gemini, DeepSeek, GLM). Local storage, async task resume, model catalog.
 files:
   - "oclaw.sh"
   - "lib/*"
@@ -28,7 +28,7 @@ Unified access to image generation, video generation, and chat through octer.ai'
 
 - 🎨 **Image Generation**: GPT Image 2, Gemini 3/3.1 image models — dual API routing handled automatically
 - 🎬 **Video Generation**: Doubao Seedance 2.0/2.5, Grok Imagine — async with auto-polling, resume via `watch`
-- 💬 **Chat**: GPT-5.5, Claude Opus 4.8, Gemini 3.x
+- 💬 **Chat**: GPT-5.5, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2
 - 💾 **Local Storage**: media saved to `images/` and `videos/` before anything else
 - 🔁 **Task Resume**: interrupted video tasks resumable by task id
 
@@ -64,7 +64,7 @@ Output ends with `MEDIA: <path>` lines pointing at saved PNGs in `images/`.
                                    [--aspect <ratio>] [--resolution <res>] [--max-wait <sec>]
 ```
 
-- default model: `doubao-seedance-2-0-260128`
+- default model: `seedance-2.0`
 - `--image`: reference image for image-to-video (local file or URL) — **doubao-seedance only**; the grok route rejects it rather than silently dropping it
 - async: submits a task, polls until done (typically 1–3 min), downloads the MP4 to `videos/`
 - on timeout the task keeps running server-side — resume with `./oclaw.sh watch <task-id>`
@@ -114,7 +114,7 @@ Copy `config.example.json` to `config.json` (gitignored) to override defaults:
   "base_url": "https://oclaw.octer.ai",
   "defaults": {
     "image": "gpt-image-2",
-    "video": "doubao-seedance-2-0-260128",
+    "video": "seedance-2.0",
     "chat": "gpt-5.5"
   }
 }

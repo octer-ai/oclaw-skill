@@ -9,7 +9,7 @@ Unified access to [octer.ai](https://octer.ai)'s OpenAI-compatible gateway — i
 
 - 🎨 **Image**: GPT Image 2, Gemini 3/3.1 image models (dual API routing handled automatically)
 - 🎬 **Video**: Doubao Seedance 2.0/2.5, Grok Imagine — async tasks with auto-poll and resume
-- 💬 **Chat**: GPT-5.5, Claude Opus 4.8, Gemini 3.x
+- 💬 **Chat**: GPT-5.5, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2
 - 💾 Media saved locally to `images/` / `videos/`; no cloud uploads
 - 🧩 Zero dependencies beyond Python 3 stdlib
 
@@ -48,11 +48,16 @@ normal generation does not require GitHub to be available. Set
 `OCLAW_MODEL_SYNC=0` to disable remote checks, or `OCLAW_MODEL_CACHE_DIR` to move
 the cache directory.
 
+Legacy configuration IDs for the two Gemini image previews and the previous
+`doubao-seedance-2-0-260128` standard-video name are translated to their current
+public IDs automatically. The retired Fast model is no longer listed because it
+has no enabled gateway channel.
+
 | Category | Models |
 |---|---|
-| image | gpt-image-2 (default), gemini-3-pro-image-preview, gemini-3.1-flash-image-preview |
-| video | doubao-seedance-2-0 (default) / -fast / -mini, doubao-seedance-2-5-260628, grok-imagine-video |
-| chat | gpt-5.5 (default), gpt-5.6-sol / -terra / -luna, claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro |
+| image | gpt-image-2 (default), gemini-3-pro-image, gemini-3.1-flash-image |
+| video | seedance-2.0 (default), doubao-seedance-2-0-mini-260615, doubao-seedance-2-5-260628, grok-imagine-video |
+| chat | gpt-5.5 (default), gpt-5.6-sol / -terra / -luna, claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro, deepseek-v4-flash / -pro, glm-5.2 |
 
 **Video caveats:** `--image` (image-to-video) works only on the doubao-seedance route;
 the grok route rejects it rather than silently dropping it. The grok channel is served
@@ -66,7 +71,7 @@ duration is clamped into 6–30s — the skill warns before submitting.
 ```json
 {
   "base_url": "https://oclaw.octer.ai",
-  "defaults": {"image": "gpt-image-2", "video": "doubao-seedance-2-0-260128", "chat": "gpt-5.5"}
+  "defaults": {"image": "gpt-image-2", "video": "seedance-2.0", "chat": "gpt-5.5"}
 }
 ```
 
