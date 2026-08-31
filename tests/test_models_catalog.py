@@ -46,7 +46,12 @@ class CatalogRoutes(unittest.TestCase):
         expected = {
             "chat": {"deepseek-v4-flash", "deepseek-v4-pro", "glm-5.2"},
             "image": {"gemini-3-pro-image", "gemini-3.1-flash-image"},
-            "video": {"seedance-2.0", "grok-imagine-video"},
+            "video": {
+                "doubao-seedance-2-0-mini-260615",
+                "doubao-seedance-2-0-fast-260128",
+                "doubao-seedance-2-0-260128",
+                "doubao-seedance-2-5-260628",
+            },
         }
         for category, model_ids in expected.items():
             with self.subTest(category=category):
@@ -55,8 +60,8 @@ class CatalogRoutes(unittest.TestCase):
         retired = {
             "gemini-3-pro-image-preview",
             "gemini-3.1-flash-image-preview",
-            "doubao-seedance-2-0-260128",
-            "doubao-seedance-2-0-fast-260128",
+            "seedance-2.0",
+            "seedance-2.0-mini",
             "grok-imagine-1.5-video",
         }
         all_ids = {

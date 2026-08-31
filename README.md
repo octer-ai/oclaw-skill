@@ -48,15 +48,14 @@ normal generation does not require GitHub to be available. Set
 `OCLAW_MODEL_SYNC=0` to disable remote checks, or `OCLAW_MODEL_CACHE_DIR` to move
 the cache directory.
 
-Legacy configuration IDs for the two Gemini image previews and the previous
-`doubao-seedance-2-0-260128` standard-video name are translated to their current
-public IDs automatically. The retired Fast model is no longer listed because it
-has no enabled gateway channel.
+Legacy configuration IDs for the two Gemini image previews are translated to
+their current public IDs automatically. Retired short Seedance IDs are rejected;
+video requests preserve the exact upstream model ID selected by the user.
 
 | Category | Models |
 |---|---|
 | image | gpt-image-2 (default), gemini-3-pro-image, gemini-3.1-flash-image |
-| video | seedance-2.0 (default), doubao-seedance-2-0-mini-260615, doubao-seedance-2-5-260628, grok-imagine-video |
+| video | doubao-seedance-2-0-260128 (default), doubao-seedance-2-0-fast-260128, doubao-seedance-2-0-mini-260615, doubao-seedance-2-5-260628, grok-imagine-video |
 | chat | gpt-5.5 (default), gpt-5.6-sol / -terra / -luna, claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro, deepseek-v4-flash / -pro, glm-5.2 |
 
 **Video caveats:** `--image` (image-to-video) works only on the doubao-seedance route;
@@ -71,7 +70,7 @@ duration is clamped into 6–30s — the skill warns before submitting.
 ```json
 {
   "base_url": "https://oclaw.octer.ai",
-  "defaults": {"image": "gpt-image-2", "video": "seedance-2.0", "chat": "gpt-5.5"}
+  "defaults": {"image": "gpt-image-2", "video": "doubao-seedance-2-0-260128", "chat": "gpt-5.5"}
 }
 ```
 

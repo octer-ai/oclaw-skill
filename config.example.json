@@ -2,7 +2,7 @@
   "base_url": "https://oclaw.octer.ai",
   "defaults": {
     "image": "gpt-image-2",
-    "video": "seedance-2.0",
+    "video": "doubao-seedance-2-0-260128",
     "chat": "gpt-5.5"
   }
 }

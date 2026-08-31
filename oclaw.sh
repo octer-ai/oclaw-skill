@@ -29,7 +29,7 @@ IMAGE OPTIONS:
   --n <int>                 number of images (image_openai route only; default 1)
 
 VIDEO OPTIONS:
-  --model <name>            default: seedance-2.0
+  --model <name>            default: doubao-seedance-2-0-260128
   --image <path|url>        reference image (image-to-video; doubao-seedance only)
   --duration <sec>          requested duration
   --aspect <ratio>          e.g. 16:9 | 9:16 | 1:1

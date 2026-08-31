@@ -21,10 +21,16 @@ MODELS = {
             "gemini-3-pro-image": {"route": "image_gemini"},
             "gemini-3.1-flash-image": {"route": "image_gemini"},
         },
-        "video": {"seedance-2.0": {"route": "video_volcengine"}},
+        "video": {
+            "doubao-seedance-2-0-260128": {"route": "video_volcengine"},
+        },
     }
 }
-DEFAULTS = {"chat": "gpt-5.5", "image": "gpt-image-2", "video": "seedance-2.0"}
+DEFAULTS = {
+    "chat": "gpt-5.5",
+    "image": "gpt-image-2",
+    "video": "doubao-seedance-2-0-260128",
+}
 
 
 def model_catalog(last_updated, video_model):
@@ -207,7 +213,6 @@ class ResolveModel(unittest.TestCase):
         cases = (
             ("image", "gemini-3-pro-image-preview", "gemini-3-pro-image"),
             ("image", "gemini-3.1-flash-image-preview", "gemini-3.1-flash-image"),
-            ("video", "doubao-seedance-2-0-260128", "seedance-2.0"),
         )
         for category, legacy, current in cases:
             with self.subTest(legacy=legacy):
@@ -215,6 +220,16 @@ class ResolveModel(unittest.TestCase):
                     MODELS, category, legacy, DEFAULTS
                 )
                 self.assertEqual(mid, current)
+
+    def test_current_seedance_id_is_preserved(self):
+        mid, _info = common.resolve_model(
+            MODELS, "video", "doubao-seedance-2-0-260128", DEFAULTS
+        )
+        self.assertEqual(mid, "doubao-seedance-2-0-260128")
+
+    def test_retired_seedance_id_is_rejected(self):
+        with self.assertRaises(ValueError):
+            common.resolve_model(MODELS, "video", "seedance-2.0", DEFAULTS)
 
     def test_none_picks_default(self):
         mid, _ = common.resolve_model(MODELS, "image", None, DEFAULTS)

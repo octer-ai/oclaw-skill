@@ -40,7 +40,7 @@ KNOWN_MODEL_ROUTES = {
 
 DEFAULT_MODELS = {
     "image": "gpt-image-2",
-    "video": "seedance-2.0",
+    "video": "doubao-seedance-2-0-260128",
     "chat": "gpt-5.5",
 }
 
@@ -49,7 +49,6 @@ DEFAULT_MODELS = {
 MODEL_ALIASES = {
     "gemini-3-pro-image-preview": "gemini-3-pro-image",
     "gemini-3.1-flash-image-preview": "gemini-3.1-flash-image",
-    "doubao-seedance-2-0-260128": "seedance-2.0",
 }
 
 _DATA_URI_RE = re.compile(r"data:image/(\w+);base64,([A-Za-z0-9+/=\s]+)")
