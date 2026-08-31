@@ -64,7 +64,7 @@ Output ends with `MEDIA: <path>` lines pointing at saved PNGs in `images/`.
                                    [--aspect <ratio>] [--resolution <res>] [--max-wait <sec>]
 ```
 
-- default model: `seedance-2.0`
+- default model: `doubao-seedance-2-0-260128`
 - `--image`: reference image for image-to-video (local file or URL) — **doubao-seedance only**; the grok route rejects it rather than silently dropping it
 - async: submits a task, polls until done (typically 1–3 min), downloads the MP4 to `videos/`
 - on timeout the task keeps running server-side — resume with `./oclaw.sh watch <task-id>`
@@ -114,7 +114,7 @@ Copy `config.example.json` to `config.json` (gitignored) to override defaults:
   "base_url": "https://oclaw.octer.ai",
   "defaults": {
     "image": "gpt-image-2",
-    "video": "seedance-2.0",
+    "video": "doubao-seedance-2-0-260128",
     "chat": "gpt-5.5"
   }
 }

@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-13",
-  "source": "Catalog IDs were reconciled with the test OClaw gateway /v1/models response and its enabled channels on 2026-08-13.",
+  "lastUpdated": "2026-08-31",
+  "source": "Seedance IDs were reconciled with the upstream production model names on 2026-08-31.",
   "models": {
     "chat": {
       "gpt-5.5": {
@@ -79,17 +79,22 @@
     },
     "video": {
       "doubao-seedance-2-5-260628": {
-        "name": "Doubao Seedance 2.5",
+        "name": "Seedance 2.5",
         "route": "video_volcengine",
         "tested": true
       },
-      "seedance-2.0": {
+      "doubao-seedance-2-0-260128": {
         "name": "Seedance 2.0",
         "route": "video_volcengine",
         "tested": true
       },
+      "doubao-seedance-2-0-fast-260128": {
+        "name": "Seedance 2.0 Fast",
+        "route": "video_volcengine",
+        "tested": true
+      },
       "doubao-seedance-2-0-mini-260615": {
-        "name": "Doubao Seedance 2.0 Mini",
+        "name": "Seedance 2.0 Mini",
         "route": "video_volcengine",
         "tested": true
       },
