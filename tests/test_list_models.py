@@ -30,7 +30,7 @@ class FormatCatalog(unittest.TestCase):
     def test_catalog_contains_seedance_2_5_volcengine_route(self):
         data = list_models.common.load_models(sync=False)
         model = data["models"]["video"]["doubao-seedance-2-5-260628"]
-        self.assertEqual(model["name"], "Doubao Seedance 2.5")
+        self.assertEqual(model["name"], "Seedance 2.5")
         self.assertEqual(model["route"], "video_volcengine")
         self.assertTrue(model["tested"])
 

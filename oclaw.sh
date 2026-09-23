@@ -47,7 +47,7 @@ ENVIRONMENT:
 
 EXAMPLES:
   oclaw.sh generate-image "a red apple on a white table"
-  oclaw.sh generate-image "cyberpunk city" --model gemini-3-pro-image-preview --aspect 16:9
+  oclaw.sh generate-image "cyberpunk city" --model gemini-3-pro-image --aspect 16:9
   oclaw.sh generate-video "a cat walking in a garden" --model doubao-seedance-2-0-mini-260615
   oclaw.sh generate-video "the apple rotates slowly" --image ./ref.png
   oclaw.sh generate-video "a red ball rolls" --model grok-imagine-video --resolution 720p

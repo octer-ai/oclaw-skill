@@ -18,11 +18,19 @@ MODELS = {
         "chat": {"gpt-5.5": {"route": "chat"}},
         "image": {
             "gpt-image-2": {"route": "image_openai"},
-            "gemini-3.1-flash-image-preview": {"route": "image_gemini"},
+            "gemini-3-pro-image": {"route": "image_gemini"},
+            "gemini-3.1-flash-image": {"route": "image_gemini"},
+        },
+        "video": {
+            "doubao-seedance-2-0-260128": {"route": "video_volcengine"},
         },
     }
 }
-DEFAULTS = {"chat": "gpt-5.5", "image": "gpt-image-2", "video": "doubao-seedance-2-0-260128"}
+DEFAULTS = {
+    "chat": "gpt-5.5",
+    "image": "gpt-image-2",
+    "video": "doubao-seedance-2-0-260128",
+}
 
 
 def model_catalog(last_updated, video_model):
@@ -197,9 +205,31 @@ class TimestampedName(unittest.TestCase):
 
 class ResolveModel(unittest.TestCase):
     def test_explicit_model(self):
-        mid, info = common.resolve_model(MODELS, "image", "gemini-3.1-flash-image-preview", DEFAULTS)
-        self.assertEqual(mid, "gemini-3.1-flash-image-preview")
+        mid, info = common.resolve_model(MODELS, "image", "gemini-3.1-flash-image", DEFAULTS)
+        self.assertEqual(mid, "gemini-3.1-flash-image")
         self.assertEqual(info["route"], "image_gemini")
+
+    def test_legacy_model_ids_are_normalized(self):
+        cases = (
+            ("image", "gemini-3-pro-image-preview", "gemini-3-pro-image"),
+            ("image", "gemini-3.1-flash-image-preview", "gemini-3.1-flash-image"),
+        )
+        for category, legacy, current in cases:
+            with self.subTest(legacy=legacy):
+                mid, _info = common.resolve_model(
+                    MODELS, category, legacy, DEFAULTS
+                )
+                self.assertEqual(mid, current)
+
+    def test_current_seedance_id_is_preserved(self):
+        mid, _info = common.resolve_model(
+            MODELS, "video", "doubao-seedance-2-0-260128", DEFAULTS
+        )
+        self.assertEqual(mid, "doubao-seedance-2-0-260128")
+
+    def test_retired_seedance_id_is_rejected(self):
+        with self.assertRaises(ValueError):
+            common.resolve_model(MODELS, "video", "seedance-2.0", DEFAULTS)
 
     def test_none_picks_default(self):
         mid, _ = common.resolve_model(MODELS, "image", None, DEFAULTS)

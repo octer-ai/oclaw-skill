@@ -7,7 +7,7 @@ Unified access to [octer.ai](https://octer.ai)'s OpenAI-compatible gateway — i
 
 ## Features
 
-- 🎨 **Image**: GPT Image 2 and Gemini 3/3.1 Image; Nano Banana Pro/2 aliases are listed as unverified
+- 🎨 **Image**: GPT Image 2, Gemini 3/3.1 image models (dual API routing handled automatically)
 - 🎬 **Video**: Doubao Seedance 2.0/2.5, Grok Imagine — async tasks with auto-poll and resume
 - 💬 **Chat**: GPT-5.5/5.6, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2, MiniMax M3, Qwen 3.7/3.8
 - 💾 Media saved locally to `images/` / `videos/`; no cloud uploads
@@ -18,7 +18,7 @@ Unified access to [octer.ai](https://octer.ai)'s OpenAI-compatible gateway — i
 ```bash
 git clone <repo-url> && cd oclaw-skill
 chmod +x oclaw.sh lib/*.py
-export OCLAW_API_KEY="sk-..."
+export OCLAW_API_KEY="YOUR_OCLAW_API_KEY"
 
 ./oclaw.sh generate-image "A red apple on a wooden table"
 ./oclaw.sh generate-video "a cat walking in a garden" --model doubao-seedance-2-0-mini-260615
@@ -38,7 +38,7 @@ export OCLAW_API_KEY="sk-..."
 
 ## Models
 
-See `./oclaw.sh models` for the full catalog (✓ = previously tested against the API). Newly listed models are untested from this machine; some pricing-page-only IDs and routes are inferred.
+See `./oclaw.sh models` for the full catalog (✓ = previously tested against the API). New models are untested from this machine; the pricing-page-only Nano Banana IDs and route are inferred.
 
 While handling a normal command, the skill checks the official GitHub
 `master/models.json` if it has not checked within the last 7 days, then keeps the
@@ -48,11 +48,15 @@ normal generation does not require GitHub to be available. Set
 `OCLAW_MODEL_SYNC=0` to disable remote checks, or `OCLAW_MODEL_CACHE_DIR` to move
 the cache directory.
 
-| Category | Examples (use `./oclaw.sh models` for all IDs) |
+Legacy configuration IDs for the two Gemini image previews are translated to
+their current public IDs automatically. Retired short Seedance IDs are rejected;
+video requests preserve the exact upstream model ID selected by the user.
+
+| Category | Models |
 |---|---|
-| image | `gpt-image-2` (default), `gemini-3-pro-image`, `gemini-3.1-flash-image`, `nano-banana-2` |
-| video | `doubao-seedance-2-0-260128` (default), `doubao-seedance-2-5-260628`, `seedance-2.0`, `grok-imagine-video` |
-| chat | `gpt-5.5` (default), `gpt-5.6-sol`, `deepseek-v4-pro`, `glm-5.2`, `MiniMax-M3`, `qwen3.8-max` |
+| image | gpt-image-2 (default), gemini-3-pro-image, gemini-3.1-flash-image, nano-banana-pro / -2 (unverified) |
+| video | doubao-seedance-2-0-260128 (default), doubao-seedance-2-0-fast-260128, doubao-seedance-2-0-mini-260615, doubao-seedance-2-5-260628, grok-imagine-video |
+| chat | gpt-5.5 (default), gpt-5.6-sol / -terra / -luna, claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro / 3.1-flash-lite, deepseek-v4-flash / -pro, glm-5.2, MiniMax-M3, qwen3.8-max / qwen3.7-max / qwen3.7-plus |
 
 **Video caveats:** `--image` (image-to-video) works only on the doubao-seedance route;
 the grok route rejects it rather than silently dropping it. The grok channel is served
