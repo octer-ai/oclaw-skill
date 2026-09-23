@@ -7,9 +7,9 @@ Unified access to [octer.ai](https://octer.ai)'s OpenAI-compatible gateway — i
 
 ## Features
 
-- 🎨 **Image**: GPT Image 2, Gemini 3/3.1 image models (dual API routing handled automatically)
+- 🎨 **Image**: GPT Image 2/2.5 and Gemini 3/3.1 image models (dual API routing handled automatically)
 - 🎬 **Video**: Doubao Seedance 2.0/2.5, Grok Imagine — async tasks with auto-poll and resume
-- 💬 **Chat**: GPT-5.5/5.6, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2, MiniMax M3, Qwen 3.7/3.8
+- 💬 **Chat**: GPT-5.5/5.6/6, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2/5.3, MiniMax M3, Qwen 3.7/3.8
 - 💾 Media saved locally to `images/` / `videos/`; no cloud uploads
 - 🧩 Zero dependencies beyond Python 3 stdlib
 
@@ -54,9 +54,9 @@ video requests preserve the exact upstream model ID selected by the user.
 
 | Category | Models |
 |---|---|
-| image | gpt-image-2 (default), gemini-3-pro-image, gemini-3.1-flash-image, nano-banana-pro / -2 (unverified) |
+| image | gpt-image-2 (default), gpt-image-2.5-sunburst / -flare, gemini-3-pro-image, gemini-3.1-flash-image, nano-banana-pro / -2 (new IDs unverified) |
 | video | doubao-seedance-2-0-260128 (default), doubao-seedance-2-0-fast-260128, doubao-seedance-2-0-mini-260615, doubao-seedance-2-5-260628, grok-imagine-video |
-| chat | gpt-5.5 (default), gpt-5.6-sol / -terra / -luna, claude-opus-4-8, gemini-3-flash / 3.5-flash / 3.1-pro / 3.1-flash-lite, deepseek-v4-flash / -pro, glm-5.2, MiniMax-M3, qwen3.8-max / qwen3.7-max / qwen3.7-plus |
+| chat | gpt-5.5 (default), gpt-5.6-sol / -terra / -luna, gpt-6-astra / -sol / -luna, claude-opus-4-8, gemini-3.8-flash / 3.5-flash / 3.1-pro / 3.1-flash-lite, deepseek-v4-flash / -pro, glm-5.2 / 5.3, MiniMax-M3, qwen3.8-max / qwen3.7-max / qwen3.7-plus |
 
 **Video caveats:** `--image` (image-to-video) works only on the doubao-seedance route;
 the grok route rejects it rather than silently dropping it. The grok channel is served

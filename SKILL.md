@@ -26,9 +26,9 @@ Unified access to image generation, video generation, and chat through octer.ai'
 
 ## Features
 
-- 🎨 **Image Generation**: GPT Image 2, Gemini 3/3.1 image models — dual API routing handled automatically
+- 🎨 **Image Generation**: GPT Image 2/2.5, Gemini 3/3.1 image models — dual API routing handled automatically
 - 🎬 **Video Generation**: Doubao Seedance 2.0/2.5, Grok Imagine — async with auto-polling, resume via `watch`
-- 💬 **Chat**: GPT-5.5/5.6, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2, MiniMax M3, Qwen 3.7/3.8
+- 💬 **Chat**: GPT-5.5/5.6/6, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2/5.3, MiniMax M3, Qwen 3.7/3.8
 - 💾 **Local Storage**: media saved to `images/` and `videos/` before anything else
 - 🔁 **Task Resume**: interrupted video tasks resumable by task id
 

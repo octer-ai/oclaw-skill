@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-09-23",
-  "source": "Existing tested flags reflect previous live API checks, including the 2026-08-31 Seedance ID reconciliation. New entries were cross-checked against https://octer.ai/zh/oclaw and https://octer.ai/es/oclaw/install on 2026-09-23 but have not been tested against the live API. Use install-guide model IDs where the pricing-page labels differ.",
+  "lastUpdated": "2026-09-23T11:37:06Z",
+  "source": "Existing tested flags reflect previous live API checks, including the 2026-08-31 Seedance ID reconciliation. New entries were checked against the live https://octer.ai/zh/oclaw pricing page on 2026-09-23; their API routes have not been verified from this machine. Install-guide model IDs take precedence where pricing-page vendor labels differ.",
   "models": {
     "chat": {
       "gpt-5.5": {
@@ -84,6 +84,31 @@
         "name": "Qwen 3.7 Plus",
         "route": "chat",
         "tested": false
+      },
+      "gpt-6-astra": {
+        "name": "GPT-6 Astra",
+        "route": "chat",
+        "tested": false
+      },
+      "gpt-6-sol": {
+        "name": "GPT-6 Sol",
+        "route": "chat",
+        "tested": false
+      },
+      "gpt-6-luna": {
+        "name": "GPT-6 Luna",
+        "route": "chat",
+        "tested": false
+      },
+      "gemini-3.8-flash": {
+        "name": "Gemini 3.8 Flash",
+        "route": "chat",
+        "tested": false
+      },
+      "glm-5.3": {
+        "name": "GLM-5.3",
+        "route": "chat",
+        "tested": false
       }
     },
     "image": {
@@ -113,6 +138,18 @@
         "route": "image_gemini",
         "tested": false,
         "note": "Pricing-page model ID; Gemini-native route inferred and unverified"
+      },
+      "gpt-image-2.5-sunburst": {
+        "name": "GPT Image 2.5 Sunburst",
+        "route": "image_openai",
+        "tested": false,
+        "note": "Pricing-page model ID; OpenAI-compatible image route inferred and unverified"
+      },
+      "gpt-image-2.5-flare": {
+        "name": "GPT Image 2.5 Flare",
+        "route": "image_openai",
+        "tested": false,
+        "note": "Pricing-page model ID; OpenAI-compatible image route inferred and unverified"
       }
     },
     "video": {
