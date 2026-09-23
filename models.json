@@ -1,6 +1,6 @@
 {
-  "lastUpdated": "2026-08-12",
-  "source": "Aligned with the new-api direct-access doc. The original 15 models were verified against the new-api instance on 2026-07-12; Doubao Seedance 2.5 was added as tested on 2026-08-12. Not re-verified from this machine: the token available here was rejected by the public gateway.",
+  "lastUpdated": "2026-09-23",
+  "source": "Existing tested flags reflect earlier API checks. New entries were cross-checked against https://octer.ai/zh/oclaw and https://octer.ai/es/oclaw/install on 2026-09-23; they have not been tested against the live API. Pricing-page vendor/model labels are not always callable model IDs, so the install guide's model IDs take precedence where available.",
   "models": {
     "chat": {
       "gpt-5.5": {
@@ -43,6 +43,47 @@
         "name": "Gemini 3 Flash Preview",
         "route": "chat",
         "tested": true
+      },
+      "gemini-3.1-flash-lite": {
+        "name": "Gemini 3.1 Flash Lite",
+        "route": "chat",
+        "tested": false,
+        "note": "Pricing-page model ID; live API not verified"
+      },
+      "deepseek-v4-pro": {
+        "name": "DeepSeek V4 Pro",
+        "route": "chat",
+        "tested": false
+      },
+      "deepseek-v4-flash": {
+        "name": "DeepSeek V4 Flash",
+        "route": "chat",
+        "tested": false
+      },
+      "glm-5.2": {
+        "name": "GLM-5.2",
+        "route": "chat",
+        "tested": false
+      },
+      "MiniMax-M3": {
+        "name": "MiniMax M3",
+        "route": "chat",
+        "tested": false
+      },
+      "qwen3.8-max": {
+        "name": "Qwen 3.8 Max",
+        "route": "chat",
+        "tested": false
+      },
+      "qwen3.7-max": {
+        "name": "Qwen 3.7 Max",
+        "route": "chat",
+        "tested": false
+      },
+      "qwen3.7-plus": {
+        "name": "Qwen 3.7 Plus",
+        "route": "chat",
+        "tested": false
       }
     },
     "image": {
@@ -60,6 +101,28 @@
         "name": "Gemini 3.1 Flash Image Preview",
         "route": "image_gemini",
         "tested": true
+      },
+      "gemini-3-pro-image": {
+        "name": "Gemini 3 Pro Image",
+        "route": "image_gemini",
+        "tested": false
+      },
+      "gemini-3.1-flash-image": {
+        "name": "Gemini 3.1 Flash Image",
+        "route": "image_gemini",
+        "tested": false
+      },
+      "nano-banana-pro": {
+        "name": "Nano Banana Pro",
+        "route": "image_gemini",
+        "tested": false,
+        "note": "Pricing-page model ID; Gemini-native route inferred and unverified"
+      },
+      "nano-banana-2": {
+        "name": "Nano Banana 2",
+        "route": "image_gemini",
+        "tested": false,
+        "note": "Pricing-page model ID; Gemini-native route inferred and unverified"
       }
     },
     "video": {
@@ -88,6 +151,18 @@
         "route": "video_xai",
         "tested": true,
         "note": "Upstream is an aggregator, not xAI itself: 1080p is downgraded to 720p and duration is clamped to 6-30s"
+      },
+      "seedance-2.0": {
+        "name": "Seedance 2.0",
+        "route": "video_volcengine",
+        "tested": false,
+        "note": "Install-guide model ID; Volcengine task route inferred and unverified"
+      },
+      "seedance-2.0-fast": {
+        "name": "Seedance 2.0 Fast",
+        "route": "video_volcengine",
+        "tested": false,
+        "note": "Pricing-page model ID; Volcengine task route inferred and unverified"
       }
     }
   }
