@@ -2,7 +2,7 @@
 name: oclaw
 version: 1.0.0
 description: |
-  Unified access to octer.ai's OpenAI-compatible gateway - image generation (GPT Image 2, Gemini image models), video generation (Doubao Seedance, Grok Imagine), and chat (GPT-5.5, Claude Opus 4.8, Gemini, DeepSeek, GLM). Local storage, async task resume, model catalog.
+  Unified access to octer.ai's OpenAI-compatible gateway - image generation (GPT Image 2, Gemini image models), video generation (Doubao Seedance, Grok Imagine), and chat (GPT, Claude, Gemini, DeepSeek, GLM, MiniMax, Qwen). Local storage, async task resume, model catalog.
 files:
   - "oclaw.sh"
   - "lib/*"
@@ -28,7 +28,7 @@ Unified access to image generation, video generation, and chat through octer.ai'
 
 - 🎨 **Image Generation**: GPT Image 2, Gemini 3/3.1 image models — dual API routing handled automatically
 - 🎬 **Video Generation**: Doubao Seedance 2.0/2.5, Grok Imagine — async with auto-polling, resume via `watch`
-- 💬 **Chat**: GPT-5.5, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2
+- 💬 **Chat**: GPT-5.5/5.6, Claude Opus 4.8, Gemini 3.x, DeepSeek V4, GLM-5.2, MiniMax M3, Qwen 3.7/3.8
 - 💾 **Local Storage**: media saved to `images/` and `videos/` before anything else
 - 🔁 **Task Resume**: interrupted video tasks resumable by task id
 
@@ -127,7 +127,7 @@ When a command needs the model catalog, the skill checks the official GitHub
 `master/models.json` if no check has run in the previous 7 days. This happens
 only during command use; there is no background process. The newest valid result
 is cached locally, and any network or validation failure falls back to the cache or
-the bundled `models.json`.
+the bundled `models.json`. A check mark in `models` means a previous API test. New model entries are untested; the Nano Banana IDs and Gemini-native route are inferred from the pricing page.
 
 ## File Storage
 
