@@ -47,9 +47,13 @@ DEFAULT_MODELS = {
 # Keep existing config.json files and explicit CLI invocations working after
 # gateway model IDs are renamed. Requests always use the current public ID.
 MODEL_ALIASES = {
+    "gemini-3.1-pro-preview": "gpt-6.1-sol",
+    "gemini-3-flash-preview": "gemini-3.8-flash",
     "gemini-3-pro-image-preview": "gemini-3-pro-image",
     "gemini-3.1-flash-image-preview": "gemini-3.1-flash-image",
 }
+
+RETIRED_CHAT_MODELS = frozenset({"gemini-3.1-pro-preview", "gemini-3-flash-preview"})
 
 _DATA_URI_RE = re.compile(r"data:image/(\w+);base64,([A-Za-z0-9+/=\s]+)")
 
@@ -259,7 +263,13 @@ def load_models(sync=True):
         finally:
             _mark_sync_attempt(marker_path)
 
-    return _newest_model_catalog(bundled, cached, fetched)
+    catalog = _newest_model_catalog(bundled, cached, fetched)
+    # Old weekly caches must not reintroduce unavailable model choices.
+    return {**catalog, "models": {
+        **catalog["models"],
+        "chat": {model: info for model, info in catalog["models"]["chat"].items()
+                 if model not in RETIRED_CHAT_MODELS},
+    }}
 
 
 def load_defaults():
